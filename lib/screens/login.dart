@@ -1,8 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pos_app/screens/home.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void loginAction() {
+    // Here you can implement your authentication logic.
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    // For simplicity, I'm just checking if the username and password are not empty.
+    if (username.isNotEmpty && password.isNotEmpty) {
+      // Navigate to the home screen after successful login.
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
+    } else {
+      // Show an error dialog if the username or password is empty.
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Please enter both username and password.'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +128,9 @@ class Login extends StatelessWidget {
                                   bottom: BorderSide(color: Colors.white),
                                 ),
                               ),
-                              child: const TextField(
-                                decoration: InputDecoration(
+                              child: TextField(
+                                controller: _usernameController,
+                                decoration: const InputDecoration(
                                   hintText: "Email",
                                   hintStyle: TextStyle(
                                     color: Colors.grey,
@@ -127,8 +170,10 @@ class Login extends StatelessWidget {
                                   bottom: BorderSide(color: Colors.white),
                                 ),
                               ),
-                              child: const TextField(
-                                decoration: InputDecoration(
+                              child: TextField(
+                                controller: _passwordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
                                   hintText: "Password",
                                   hintStyle: TextStyle(
                                     color: Colors.grey,
